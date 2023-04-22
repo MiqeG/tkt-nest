@@ -174,7 +174,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-example/dev/1681387287135-2023-04-13T12:01:27.135Z/serverless-example.zip"
+                "S3Key": "serverless/serverless-example/dev/1682150154483-2023-04-22T07:55:54.483Z/serverless-example.zip"
               },
               "Handler": "dist/main.handler",
               "Runtime": "nodejs18.x",
@@ -192,14 +192,14 @@
               "MainLogGroup"
             ]
           },
-          "MainLambdaVersionFoUsuTuhUOnZqOSuWgyqAK6nhA7YnoHw9NKk66mZlo": {
+          "MainLambdaVersionEzQQz71Hvb1MIwzbVkZhX5FkhPf1DjHHlxxhg7tb8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MainLambdaFunction"
               },
-              "CodeSha256": "PFgkXfSI3toa2GxvdoLfzA2e7OxLP/FIQsqU2fwlMjk="
+              "CodeSha256": "469AguYOOXCJjHoSPjslSRzqL4+HbxQ0+VMxnGNeWzU="
             }
           },
           "ApiGatewayRestApi": {
@@ -324,7 +324,7 @@
               "MainLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1681387275173": {
+          "ApiGatewayDeployment1682150141007": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -387,7 +387,7 @@
           "MainLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MainLambdaVersionFoUsuTuhUOnZqOSuWgyqAK6nhA7YnoHw9NKk66mZlo"
+              "Ref": "MainLambdaVersionEzQQz71Hvb1MIwzbVkZhX5FkhPf1DjHHlxxhg7tb8"
             },
             "Export": {
               "Name": "sls-serverless-example-dev-MainLambdaFunctionQualifiedArn"
@@ -534,7 +534,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "MainLambdaVersionFoUsuTuhUOnZqOSuWgyqAK6nhA7YnoHw9NKk66mZlo"
+        "versionLogicalId": "MainLambdaVersionEzQQz71Hvb1MIwzbVkZhX5FkhPf1DjHHlxxhg7tb8"
       }
     },
     "configValidationMode": "warn",
@@ -556,7 +556,7 @@
     "artifact": "C:\\git\\nestjs_server\\nest_server\\.serverless\\serverless-example.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-example/dev/1681387287135-2023-04-13T12:01:27.135Z",
+    "artifactDirectoryName": "serverless/serverless-example/dev/1682150154483-2023-04-22T07:55:54.483Z",
     "artifact": "serverless-example.zip"
   }
 }

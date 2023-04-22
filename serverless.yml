@@ -1,4 +1,4 @@
-service: serverless-example
+service: tkt-nest
 
 plugins:
   - serverless-offline
@@ -6,6 +6,8 @@ plugins:
 provider:
   name: aws
   runtime: nodejs18.x
+  stage: production
+  region: eu-west-1
 
 functions:
   main:
@@ -16,4 +18,4 @@ functions:
           path: /
       - http:
           method: ANY
-          path: '{proxy+}'
+          path: "{proxy+}"
