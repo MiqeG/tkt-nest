@@ -5,6 +5,8 @@ import {
   ScanCommandOutput,
   DeleteCommandOutput,
   GetCommandOutput,
+  BatchWriteCommandOutput,
+  UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
@@ -36,6 +38,20 @@ export class AppService {
   async delteEntreprise(input: entrepriseYear): Promise<DeleteCommandOutput> {
     try {
       return await db.deleteEntreprise(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async batchWtrite(input: batchRequest): Promise<BatchWriteCommandOutput> {
+    try {
+      return await db.batchWtrite(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async updateEntreprise(input: entrepriseYear): Promise<UpdateCommandOutput> {
+    try {
+      return await db.updateEntreprise(input);
     } catch (error) {
       return makeError(error);
     }

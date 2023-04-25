@@ -4,6 +4,8 @@ import {
   DynamoDBClient,
   DynamoDB,
   CreateTableCommandOutput,
+  BatchWriteItemCommand,
+  BatchWriteItemCommandOutput,
 } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
@@ -17,9 +19,11 @@ import {
   QueryCommandOutput,
   DeleteCommand,
   DeleteCommandOutput,
+  UpdateCommandOutput,
+  UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import env from '../env';
-
+import parse_dynamo_item from './parse_dynamo_item';
 const ddbDocClient = new DynamoDBClient({ region: env.REGION });
 const marshallOptions = {
   // Whether to automatically convert empty strings, blobs, and sets to `null`.
@@ -103,6 +107,77 @@ export const query = async (reqBody: object): Promise<QueryCommandOutput> => {
     ...reqBody,
   };
   return await docClient.send(new QueryCommand(queryParams));
+};
+export const updateEntreprise = async (
+  reqBody: entrepriseYear,
+): Promise<UpdateCommandOutput> => {
+  const updParams = {
+    TableName: params.TableName,
+    Key: {
+      siren: reqBody.siren,
+      year: reqBody.year,
+    },
+    UpdateExpression:
+      'SET #ca = :ca , #margin = :margin , #loss = :loss , #ebitda = :ebitda , #sector = :sector , #name = :name  ',
+    ExpressionAttributeNames: {
+      '#ca': 'ca',
+      '#margin': 'margin',
+      '#loss': 'loss',
+      '#ebitda': 'ebitda',
+      '#sector': 'sector',
+      '#name': 'name',
+    },
+    ExpressionAttributeValues: {
+      ':ca': reqBody.ca,
+      ':margin': reqBody.margin,
+      ':loss': reqBody.loss,
+      ':ebitda': reqBody.ebitda,
+      ':sector': reqBody.sector,
+      ':name': reqBody.name,
+    },
+  };
+  return await docClient.send(new UpdateCommand(updParams));
+};
+export const batchWtrite = async (
+  reqBody: batchRequest,
+): Promise<BatchWriteItemCommandOutput> => {
+  const input = {
+    // BatchWriteItemInput
+    RequestItems: {
+      // BatchWriteItemRequestMap // required
+      [params.TableName]: [
+        // WriteRequests
+      ],
+    },
+    ReturnConsumedCapacity: 'INDEXES' || 'TOTAL' || 'NONE',
+    ReturnItemCollectionMetrics: 'SIZE' || 'NONE',
+  };
+  if (reqBody.Items.length > 25) throw { code: 'too_many_items' };
+  if (!reqBody.Items.length) throw { code: 'no_items' };
+  reqBody.Items.forEach((item: entrepriseYear) => {
+    if (reqBody.put) {
+      if (!verifyData(item, dataVerificationModel))
+        throw { code: 'bat_item', item: item };
+      const putRequest = {
+        // WriteRequest
+        PutRequest: {
+          // PutRequest
+          Item: parse_dynamo_item(item).M,
+        },
+      };
+      input.RequestItems[params.TableName].push(putRequest);
+    } else if (reqBody.delete) {
+      const deleteRequest = {
+        // WriteRequest
+        DeleteRequest: {
+          Key: parse_dynamo_item(item).M,
+        },
+      };
+      input.RequestItems[params.TableName].push(deleteRequest);
+    }
+  });
+  const command = new BatchWriteItemCommand(input);
+  return await docClient.send(command);
 };
 function verifyData(item: object, model: object): boolean {
   for (const key in model) {

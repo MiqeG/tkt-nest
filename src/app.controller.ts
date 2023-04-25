@@ -4,6 +4,8 @@ import {
   ScanCommandOutput,
   DeleteCommandOutput,
   GetCommandOutput,
+  BatchWriteCommandOutput,
+  UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
 
 @Controller()
@@ -28,5 +30,13 @@ export class AppController {
   @Post('/get_entreprise')
   getEntreprise(@Body() body: entrepriseYear): Promise<GetCommandOutput> {
     return this.appService.getEntreprise(body);
+  }
+  @Post('/batch_write')
+  batchWrite(@Body() body: batchRequest): Promise<BatchWriteCommandOutput> {
+    return this.appService.batchWtrite(body);
+  }
+  @Post('/upd_entreprise')
+  updateEntreprise(@Body() body: entrepriseYear): Promise<UpdateCommandOutput> {
+    return this.appService.updateEntreprise(body);
   }
 }

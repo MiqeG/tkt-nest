@@ -8,3 +8,13 @@ interface entrepriseYear {
   loss: number;
   year: number;
 }
+interface primaryKey {
+  siren: number;
+  year: number;
+}
+type batchRequestItem = entrepriseYear | primaryKey;
+interface batchRequest {
+  Items: array[batchRequestItem];
+  delete?: boolean;
+  put?: boolean;
+}
