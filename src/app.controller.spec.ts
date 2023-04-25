@@ -47,6 +47,12 @@ describe('AppController', () => {
         (await appController.putEntreprise(mock_item)).$metadata.httpStatusCode,
       ).toBe(200);
     });
+    it('should return $metadata.httpStatusCode 200 update entreprise', async () => {
+      expect(
+        (await appController.updateEntreprise(mock_item)).$metadata
+          .httpStatusCode,
+      ).toBe(200);
+    });
     it('should return $metadata.httpStatusCode 200 delete entreprise', async () => {
       expect(
         (await appController.deleteEntreprise(mock_item)).$metadata
@@ -80,11 +86,6 @@ describe('AppController', () => {
           })
         ).$metadata.httpStatusCode,
       ).toBe(200);
-    });
-    it('should return $metadata.httpStatusCode 200 update entreprise', async () => {
-      const response = await appController.updateEntreprise(mock_item);
-      console.log('RESPONSE  :', response);
-      expect(response.$metadata.httpStatusCode).toBe(200);
     });
   });
 });
