@@ -87,5 +87,8 @@ describe('AppController', () => {
         ).$metadata.httpStatusCode,
       ).toBe(200);
     });
+    it('should return some Items scan options', async () => {
+      expect(await appController.scanOptions()).toHaveProperty('Items');
+    });
   });
 });
