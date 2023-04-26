@@ -18,3 +18,6 @@ interface batchRequest {
   delete?: boolean;
   put?: boolean;
 }
+interface sectorOption {
+  sector: string;
+}

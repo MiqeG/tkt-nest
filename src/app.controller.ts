@@ -39,4 +39,8 @@ export class AppController {
   updateEntreprise(@Body() body: entrepriseYear): Promise<UpdateCommandOutput> {
     return this.appService.updateEntreprise(body);
   }
+  @Post('/scan_options')
+  scanOptions(): Promise<UpdateCommandOutput> {
+    return this.appService.scanOptions();
+  }
 }

@@ -20999,4 +20999,25 @@ export default [
       },
     ],
   },
+  {
+    name: 'TKT RSE',
+    sector: 'Other',
+    siren: 135694027,
+    results: [
+      {
+        ca: 2077357,
+        margin: 497351,
+        ebitda: 65952,
+        loss: 858474,
+        year: 2017,
+      },
+      {
+        ca: 432070,
+        margin: 427778,
+        ebitda: 290433,
+        loss: 8023406,
+        year: 2016,
+      },
+    ],
+  },
 ];

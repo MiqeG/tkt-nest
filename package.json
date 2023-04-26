@@ -7,6 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "local": "node ./dist/index.js",
+    "create": "node ./dist/db/create_table.js",
+    "fill": "node ./dist/db/fill_table.js",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

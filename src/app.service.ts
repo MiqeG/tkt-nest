@@ -56,6 +56,13 @@ export class AppService {
       return makeError(error);
     }
   }
+  async scanOptions(): Promise<UpdateCommandOutput> {
+    try {
+      return await db.scanOptions();
+    } catch (error) {
+      return makeError(error);
+    }
+  }
 }
 function makeError(error: any) {
   return error.message || error.stack || error.code || 'Internal Server Error';

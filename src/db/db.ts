@@ -6,6 +6,7 @@ import {
   CreateTableCommandOutput,
   BatchWriteItemCommand,
   BatchWriteItemCommandOutput,
+  CreateTableCommandInput,
 } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
@@ -21,9 +22,13 @@ import {
   DeleteCommandOutput,
   UpdateCommandOutput,
   UpdateCommand,
+  ScanCommandInput,
 } from '@aws-sdk/lib-dynamodb';
 import env from '../env';
 import parse_dynamo_item from './parse_dynamo_item';
+import entrepriseTableParams from './table_params';
+import option_table_params from './option_table_params';
+
 const ddbDocClient = new DynamoDBClient({ region: env.REGION });
 const marshallOptions = {
   // Whether to automatically convert empty strings, blobs, and sets to `null`.
@@ -57,7 +62,6 @@ const dataVerificationModel = {
   loss: 1111111,
   year: 2017,
 };
-import params from './table_params';
 
 export const get_entreprise = async (
   siren: number,
@@ -65,7 +69,7 @@ export const get_entreprise = async (
 ): Promise<GetCommandOutput> => {
   return await ddbDocClient.send(
     new GetCommand({
-      TableName: params.TableName,
+      TableName: entrepriseTableParams.TableName,
       Key: {
         siren: siren,
         year: year,
@@ -79,14 +83,30 @@ export const put = async (item: entrepriseYear): Promise<PutCommandOutput> => {
     throw new Error('Bad Entreprise Data Format');
   else
     return await ddbDocClient.send(
-      new PutCommand({ TableName: params.TableName, Item: item }),
+      new PutCommand({
+        TableName: entrepriseTableParams.TableName,
+        Item: item,
+      }),
+    );
+};
+export const putOption = async (
+  item: sectorOption,
+): Promise<PutCommandOutput> => {
+  if (!verifyData(item, { sector: 'test' }))
+    throw new Error('Bad Option Data Format');
+  else
+    return await ddbDocClient.send(
+      new PutCommand({
+        TableName: option_table_params.TableName,
+        Item: item,
+      }),
     );
 };
 export const deleteEntreprise = async (
   item: entrepriseYear,
 ): Promise<DeleteCommandOutput> => {
   const deleteParams = {
-    TableName: params.TableName,
+    TableName: entrepriseTableParams.TableName,
     Key: {
       siren: item.siren,
       year: item.year,
@@ -96,14 +116,25 @@ export const deleteEntreprise = async (
 };
 export const scan = async (reqBody: object): Promise<ScanCommandOutput> => {
   const scanParams = {
-    TableName: params.TableName,
+    TableName: entrepriseTableParams.TableName,
     ...reqBody,
   };
-  return await docClient.send(new ScanCommand(scanParams));
+  return scanner(scanParams);
 };
+export const scanOptions = async (): Promise<ScanCommandOutput> => {
+  const scanParams = {
+    TableName: option_table_params.TableName,
+  };
+  return scanner(scanParams);
+};
+async function scanner(
+  scanParams: ScanCommandInput,
+): Promise<ScanCommandOutput> {
+  return await docClient.send(new ScanCommand(scanParams));
+}
 export const query = async (reqBody: object): Promise<QueryCommandOutput> => {
   const queryParams = {
-    TableName: params.TableName,
+    TableName: entrepriseTableParams.TableName,
     ...reqBody,
   };
   return await docClient.send(new QueryCommand(queryParams));
@@ -112,7 +143,7 @@ export const updateEntreprise = async (
   reqBody: entrepriseYear,
 ): Promise<UpdateCommandOutput> => {
   const updParams = {
-    TableName: params.TableName,
+    TableName: entrepriseTableParams.TableName,
     Key: {
       siren: reqBody.siren,
       year: reqBody.year,
@@ -145,7 +176,7 @@ export const batchWtrite = async (
     // BatchWriteItemInput
     RequestItems: {
       // BatchWriteItemRequestMap // required
-      [params.TableName]: [
+      [entrepriseTableParams.TableName]: [
         // WriteRequests
       ],
     },
@@ -165,7 +196,7 @@ export const batchWtrite = async (
           Item: parse_dynamo_item(item).M,
         },
       };
-      input.RequestItems[params.TableName].push(putRequest);
+      input.RequestItems[entrepriseTableParams.TableName].push(putRequest);
     } else if (reqBody.delete) {
       const deleteRequest = {
         // WriteRequest
@@ -173,7 +204,7 @@ export const batchWtrite = async (
           Key: parse_dynamo_item(item).M,
         },
       };
-      input.RequestItems[params.TableName].push(deleteRequest);
+      input.RequestItems[entrepriseTableParams.TableName].push(deleteRequest);
     }
   });
   const command = new BatchWriteItemCommand(input);
@@ -191,9 +222,11 @@ function verifyData(item: object, model: object): boolean {
   return true;
 }
 //DynamoDb Table creation : be sure to have AWS Cretentials and IAM Authorizations
-export const create = async function (): Promise<CreateTableCommandOutput> {
+export const createTable = async function (
+  tableParams: CreateTableCommandInput,
+): Promise<CreateTableCommandOutput> {
   try {
-    return await dynamoDb.createTable(params);
+    return await dynamoDb.createTable(tableParams);
   } catch (error) {
     console.error('Table creation error : ', error);
   }
