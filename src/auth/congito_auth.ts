@@ -12,7 +12,22 @@ import {
 const client = new CognitoIdentityProviderClient({
   region: process.env.REGION,
 });
-
+export const refreshTokens = async (
+  auth: SignInRequest,
+): Promise<AdminInitiateAuthCommandOutput> => {
+  const input = {
+    // AdminInitiateAuthRequest
+    UserPoolId: process.env.COGNITO_USER_POOL, // required
+    ClientId: process.env.COGNITO_CLIENT_ID, // required
+    AuthFlow: 'REFRESH_TOKEN_AUTH',
+    AuthParameters: {
+      REFRESH_TOKEN: auth.refreshToken,
+    },
+  };
+  const command = new AdminInitiateAuthCommand(input);
+  const response = await client.send(command);
+  return response;
+};
 export const signIn = async (
   auth: SignInRequest,
 ): Promise<AdminInitiateAuthCommandOutput> => {
@@ -20,10 +35,7 @@ export const signIn = async (
     // AdminInitiateAuthRequest
     UserPoolId: process.env.COGNITO_USER_POOL, // required
     ClientId: process.env.COGNITO_CLIENT_ID, // required
-    AuthFlow:
-      'ADMIN_USER_PASSWORD_AUTH' ||
-      'ALLOW_USER_PASSWORD_AUTH' ||
-      'ALLOW_REFRESH_TOKEN_AUTH', // required
+    AuthFlow: 'ADMIN_USER_PASSWORD_AUTH',
     AuthParameters: {
       USERNAME: auth.email,
       PASSWORD: auth.password,
@@ -33,7 +45,6 @@ export const signIn = async (
 
   const command = new AdminInitiateAuthCommand(input);
   const response = await client.send(command);
-  auth.session = response.Session;
   return response;
 };
 export const softwareTokenMfa = async (
