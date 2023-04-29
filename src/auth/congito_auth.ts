@@ -42,7 +42,7 @@ export const changePassword = async (
   return response;
 };
 export const refreshTokens = async (
-  auth: SignInRequest,
+  refreshToken: string,
 ): Promise<AdminInitiateAuthCommandOutput> => {
   const input = {
     // AdminInitiateAuthRequest
@@ -50,7 +50,7 @@ export const refreshTokens = async (
     ClientId: process.env.COGNITO_CLIENT_ID, // required
     AuthFlow: 'REFRESH_TOKEN_AUTH',
     AuthParameters: {
-      REFRESH_TOKEN: auth.refreshToken,
+      REFRESH_TOKEN: refreshToken,
     },
   };
   const command = new AdminInitiateAuthCommand(input);

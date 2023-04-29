@@ -36,3 +36,9 @@ interface ChangePasswordRequest {
   password: string;
   accessToken: string;
 }
+interface refreshTokenRequest {
+  refreshToken: string;
+}
+interface forgotPasswordRequest {
+  email: string;
+}

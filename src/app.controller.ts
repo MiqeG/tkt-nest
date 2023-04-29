@@ -7,6 +7,14 @@ import {
   BatchWriteCommandOutput,
   UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
+import {
+  AdminInitiateAuthCommandOutput,
+  AssociateSoftwareTokenCommandOutput,
+  ChangePasswordCommandOutput,
+  ForgotPasswordCommandOutput,
+  RespondToAuthChallengeCommandOutput,
+  VerifySoftwareTokenCommandOutput,
+} from '@aws-sdk/client-cognito-identity-provider';
 
 @Controller()
 export class AppController {
@@ -43,24 +51,50 @@ export class AppController {
   scanOptions(): Promise<UpdateCommandOutput> {
     return this.appService.scanOptions();
   }
+  @Post('/change_password')
+  changePassword(
+    @Body() body: ChangePasswordRequest,
+  ): Promise<ChangePasswordCommandOutput> {
+    return this.appService.changePassword(body);
+  }
   @Post('/login')
-  login(@Body() body: SignInRequest): any {
+  login(@Body() body: SignInRequest): Promise<AdminInitiateAuthCommandOutput> {
     return this.appService.signIn(body);
   }
   @Post('/login/new_password_challenge')
-  newPasswordChallenge(@Body() body: SignInRequest): any {
+  newPasswordChallenge(
+    @Body() body: SignInRequest,
+  ): Promise<RespondToAuthChallengeCommandOutput> {
     return this.appService.newPasswordChallenge(body);
   }
   @Post('/login/verify_software_token')
-  verifySoftwareToken(@Body() body: SignInRequest): any {
+  verifySoftwareToken(
+    @Body() body: SignInRequest,
+  ): Promise<VerifySoftwareTokenCommandOutput> {
     return this.appService.verifySoftwareToken(body);
   }
   @Post('/login/software_token_mfa')
-  softwareTokenMfa(@Body() body: SignInRequest): any {
+  softwareTokenMfa(
+    @Body() body: SignInRequest,
+  ): Promise<RespondToAuthChallengeCommandOutput> {
     return this.appService.softwareTokenMfa(body);
   }
+  @Post('/login/refresh_token')
+  refreshToken(
+    @Body() body: refreshTokenRequest,
+  ): Promise<AdminInitiateAuthCommandOutput> {
+    return this.appService.refreshTokens(body.refreshToken);
+  }
+  @Post('/login/forgot_password')
+  forgotPassword(
+    @Body() body: forgotPasswordRequest,
+  ): Promise<ForgotPasswordCommandOutput> {
+    return this.appService.forgotPassword(body);
+  }
   @Post('/login/mfa_setup')
-  mfaSetup(@Body() body: SignInRequest): any {
+  mfaSetup(
+    @Body() body: SignInRequest,
+  ): Promise<AssociateSoftwareTokenCommandOutput> {
     return this.appService.mfaSetup(body);
   }
 }

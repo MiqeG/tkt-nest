@@ -14,12 +14,17 @@ import {
   mfaSetup,
   verifySoftwareToken,
   softwareTokenMfa,
+  refreshTokens,
+  changePassword,
+  forgotPassword,
 } from './auth/congito_auth';
 import {
   AdminInitiateAuthCommandOutput,
   RespondToAuthChallengeCommandOutput,
   AssociateSoftwareTokenCommandOutput,
   VerifySoftwareTokenCommandOutput,
+  ChangePasswordCommandOutput,
+  ForgotPasswordCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 
 @Injectable()
@@ -115,6 +120,31 @@ export class AppService {
   ): Promise<RespondToAuthChallengeCommandOutput> {
     try {
       return await softwareTokenMfa(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async refreshTokens(token: string): Promise<AdminInitiateAuthCommandOutput> {
+    try {
+      return await refreshTokens(token);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async changePassword(
+    body: ChangePasswordRequest,
+  ): Promise<ChangePasswordCommandOutput> {
+    try {
+      return await changePassword(body);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async forgotPassword(
+    body: forgotPasswordRequest,
+  ): Promise<ForgotPasswordCommandOutput> {
+    try {
+      return await forgotPassword(body.email);
     } catch (error) {
       return makeError(error);
     }

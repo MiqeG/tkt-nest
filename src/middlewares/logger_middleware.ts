@@ -12,7 +12,7 @@ export class LoggerMiddleware implements NestMiddleware {
     if (!(await parse_token(accessToken))) {
       if (!refreshToken) return res.status(500).json(errorResponse);
       try {
-        const response = await refreshTokens({ refreshToken: refreshToken });
+        const response = await refreshTokens(refreshToken);
         return res.json(response);
       } catch (error) {
         return res.status(500).json(errorResponse);
