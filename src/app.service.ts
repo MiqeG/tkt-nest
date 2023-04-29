@@ -8,6 +8,19 @@ import {
   BatchWriteCommandOutput,
   UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
+import {
+  signIn,
+  newPasswordRequired,
+  mfaSetup,
+  verifySoftwareToken,
+  softwareTokenMfa,
+} from './auth/congito_auth';
+import {
+  AdminInitiateAuthCommandOutput,
+  RespondToAuthChallengeCommandOutput,
+  AssociateSoftwareTokenCommandOutput,
+  VerifySoftwareTokenCommandOutput,
+} from '@aws-sdk/client-cognito-identity-provider';
 
 @Injectable()
 export class AppService {
@@ -59,6 +72,49 @@ export class AppService {
   async scanOptions(): Promise<UpdateCommandOutput> {
     try {
       return await db.scanOptions();
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async signIn(input: SignInRequest): Promise<AdminInitiateAuthCommandOutput> {
+    try {
+      return await signIn(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async newPasswordChallenge(
+    input: SignInRequest,
+  ): Promise<RespondToAuthChallengeCommandOutput> {
+    try {
+      return await newPasswordRequired(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async mfaSetup(
+    input: SignInRequest,
+  ): Promise<AssociateSoftwareTokenCommandOutput> {
+    try {
+      return await mfaSetup(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async verifySoftwareToken(
+    input: SignInRequest,
+  ): Promise<VerifySoftwareTokenCommandOutput> {
+    try {
+      return await verifySoftwareToken(input);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async softwareTokenMfa(
+    input: SignInRequest,
+  ): Promise<RespondToAuthChallengeCommandOutput> {
+    try {
+      return await softwareTokenMfa(input);
     } catch (error) {
       return makeError(error);
     }

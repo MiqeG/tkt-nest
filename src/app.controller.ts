@@ -43,4 +43,24 @@ export class AppController {
   scanOptions(): Promise<UpdateCommandOutput> {
     return this.appService.scanOptions();
   }
+  @Post('/login')
+  login(@Body() body: SignInRequest): any {
+    return this.appService.signIn(body);
+  }
+  @Post('/login/new_password_challenge')
+  newPasswordChallenge(@Body() body: SignInRequest): any {
+    return this.appService.newPasswordChallenge(body);
+  }
+  @Post('/login/verify_software_token')
+  verifySoftwareToken(@Body() body: SignInRequest): any {
+    return this.appService.verifySoftwareToken(body);
+  }
+  @Post('/login/software_token_mfa')
+  softwareTokenMfa(@Body() body: SignInRequest): any {
+    return this.appService.softwareTokenMfa(body);
+  }
+  @Post('/login/mfa_setup')
+  mfaSetup(@Body() body: SignInRequest): any {
+    return this.appService.mfaSetup(body);
+  }
 }

@@ -24,12 +24,12 @@ import {
   UpdateCommand,
   ScanCommandInput,
 } from '@aws-sdk/lib-dynamodb';
-import env from '../env';
+
 import parse_dynamo_item from './parse_dynamo_item';
 import entrepriseTableParams from './table_params';
 import option_table_params from './option_table_params';
 
-const ddbDocClient = new DynamoDBClient({ region: env.REGION });
+const ddbDocClient = new DynamoDBClient({ region: process.env.REGION });
 const marshallOptions = {
   // Whether to automatically convert empty strings, blobs, and sets to `null`.
   convertEmptyValues: false, // false, by default.
@@ -50,7 +50,7 @@ const docClient = DynamoDBDocumentClient.from(ddbDocClient, {
   unmarshallOptions,
 });
 
-const dynamoDb = new DynamoDB({ region: env.REGION });
+const dynamoDb = new DynamoDB({ region: process.env.REGION });
 
 const dataVerificationModel = {
   name: 'name',

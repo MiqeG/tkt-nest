@@ -13,6 +13,10 @@ provider:
 functions:
   main:
     handler: dist/main.handler
+    environment:
+      REGION: eu-west-1
+      COGNITO_USER_POOL: eu-west-1_L8K0hML7p
+      COGNITO_CLIENT_ID: 629gajnkkbghg3c4965tp0ivuu
     events:
       - http:
           method: ANY

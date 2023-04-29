@@ -21,3 +21,12 @@ interface batchRequest {
 interface sectorOption {
   sector: string;
 }
+interface SignInRequest {
+  email: string;
+  password: string;
+  newPassword?: string;
+  session?: string;
+  accessToken?: string;
+  mfaCode?: string;
+  userCode: string;
+}
