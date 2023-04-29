@@ -31,3 +31,8 @@ interface SignInRequest {
   userCode?: string;
   refreshToken?: string;
 }
+interface ChangePasswordRequest {
+  previousPassword: string;
+  password: string;
+  accessToken: string;
+}

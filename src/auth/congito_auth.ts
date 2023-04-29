@@ -8,10 +8,39 @@ import {
   RespondToAuthChallengeCommandOutput,
   VerifySoftwareTokenCommand,
   VerifySoftwareTokenCommandOutput,
+  ChangePasswordCommand,
+  ChangePasswordCommandOutput,
+  ForgotPasswordCommand,
+  ForgotPasswordCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 const client = new CognitoIdentityProviderClient({
   region: process.env.REGION,
 });
+export const forgotPassword = async (
+  email: string,
+): Promise<ForgotPasswordCommandOutput> => {
+  const input = {
+    // ForgotPasswordRequest
+    ClientId: process.env.COGNITO_CLIENT_ID, // required
+    Username: email, // required
+  };
+  const command = new ForgotPasswordCommand(input);
+  const response = await client.send(command);
+  return response;
+};
+export const changePassword = async (
+  body: ChangePasswordRequest,
+): Promise<ChangePasswordCommandOutput> => {
+  const input = {
+    // ChangePasswordRequest
+    PreviousPassword: body.previousPassword, // required
+    ProposedPassword: body.password, // required
+    AccessToken: body.accessToken, // required
+  };
+  const command = new ChangePasswordCommand(input);
+  const response = await client.send(command);
+  return response;
+};
 export const refreshTokens = async (
   auth: SignInRequest,
 ): Promise<AdminInitiateAuthCommandOutput> => {
