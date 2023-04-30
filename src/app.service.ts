@@ -17,6 +17,7 @@ import {
   refreshTokens,
   changePassword,
   forgotPassword,
+  confirmForgotPassword,
 } from './auth/congito_auth';
 import {
   AdminInitiateAuthCommandOutput,
@@ -25,6 +26,7 @@ import {
   VerifySoftwareTokenCommandOutput,
   ChangePasswordCommandOutput,
   ForgotPasswordCommandOutput,
+  ConfirmForgotPasswordCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 
 @Injectable()
@@ -145,6 +147,15 @@ export class AppService {
   ): Promise<ForgotPasswordCommandOutput> {
     try {
       return await forgotPassword(body.email);
+    } catch (error) {
+      return makeError(error);
+    }
+  }
+  async confirmForgotPassword(
+    body: confirmForgotPasswordRequest,
+  ): Promise<ConfirmForgotPasswordCommandOutput> {
+    try {
+      return await confirmForgotPassword(body);
     } catch (error) {
       return makeError(error);
     }

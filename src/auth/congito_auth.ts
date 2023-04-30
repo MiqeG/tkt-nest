@@ -12,10 +12,26 @@ import {
   ChangePasswordCommandOutput,
   ForgotPasswordCommand,
   ForgotPasswordCommandOutput,
+  ConfirmForgotPasswordCommand,
+  ConfirmForgotPasswordCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider';
 const client = new CognitoIdentityProviderClient({
   region: process.env.REGION,
 });
+export const confirmForgotPassword = async (
+  body: confirmForgotPasswordRequest,
+): Promise<ConfirmForgotPasswordCommandOutput> => {
+  const input = {
+    // confirmForgotPasswordRequest
+    ClientId: process.env.COGNITO_CLIENT_ID, // required
+    Username: body.email, // required
+    ConfirmationCode: body.code, // required
+    Password: body.password, // required
+  };
+  const command = new ConfirmForgotPasswordCommand(input);
+  const response = await client.send(command);
+  return response;
+};
 export const forgotPassword = async (
   email: string,
 ): Promise<ForgotPasswordCommandOutput> => {

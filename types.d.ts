@@ -42,3 +42,8 @@ interface refreshTokenRequest {
 interface forgotPasswordRequest {
   email: string;
 }
+interface confirmForgotPasswordRequest {
+  code: string;
+  password: string;
+  email: string;
+}

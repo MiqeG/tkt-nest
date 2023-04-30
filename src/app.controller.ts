@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Headers } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   ScanCommandOutput,
@@ -11,6 +11,7 @@ import {
   AdminInitiateAuthCommandOutput,
   AssociateSoftwareTokenCommandOutput,
   ChangePasswordCommandOutput,
+  ConfirmForgotPasswordCommandOutput,
   ForgotPasswordCommandOutput,
   RespondToAuthChallengeCommandOutput,
   VerifySoftwareTokenCommandOutput,
@@ -21,6 +22,10 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
   @Get()
   getHello(): string {
+    return this.appService.getHello();
+  }
+  @Post('/access_token')
+  checkAccessToken(): string {
     return this.appService.getHello();
   }
   @Post('/scan_entreprises')
@@ -81,9 +86,9 @@ export class AppController {
   }
   @Post('/login/refresh_token')
   refreshToken(
-    @Body() body: refreshTokenRequest,
+    @Headers() headers: any,
   ): Promise<AdminInitiateAuthCommandOutput> {
-    return this.appService.refreshTokens(body.refreshToken);
+    return this.appService.refreshTokens(headers['cognito-refresh-token']);
   }
   @Post('/login/forgot_password')
   forgotPassword(
@@ -96,5 +101,11 @@ export class AppController {
     @Body() body: SignInRequest,
   ): Promise<AssociateSoftwareTokenCommandOutput> {
     return this.appService.mfaSetup(body);
+  }
+  @Post('/login/confirm_forgot_password')
+  confirmForgotPassword(
+    @Body() body: confirmForgotPasswordRequest,
+  ): Promise<ConfirmForgotPasswordCommandOutput> {
+    return this.appService.confirmForgotPassword(body);
   }
 }
