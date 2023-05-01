@@ -32,8 +32,8 @@ interface SignInRequest {
   refreshToken?: string;
 }
 interface ChangePasswordRequest {
-  previousPassword: string;
   password: string;
+  newPassword: string;
   accessToken: string;
 }
 interface refreshTokenRequest {

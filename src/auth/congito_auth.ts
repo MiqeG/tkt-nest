@@ -49,8 +49,8 @@ export const changePassword = async (
 ): Promise<ChangePasswordCommandOutput> => {
   const input = {
     // ChangePasswordRequest
-    PreviousPassword: body.previousPassword, // required
-    ProposedPassword: body.password, // required
+    PreviousPassword: body.password, // required
+    ProposedPassword: body.newPassword, // required
     AccessToken: body.accessToken, // required
   };
   const command = new ChangePasswordCommand(input);
