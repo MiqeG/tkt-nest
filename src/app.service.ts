@@ -34,6 +34,9 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+  accessTokenVerified(): object {
+    return { status: 'verified' };
+  }
   async getEntreprise(input: any): Promise<GetCommandOutput> {
     try {
       return await db.get_entreprise(input.siren, input.year);

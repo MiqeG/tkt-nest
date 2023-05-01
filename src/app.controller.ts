@@ -25,8 +25,8 @@ export class AppController {
     return this.appService.getHello();
   }
   @Post('/access_token')
-  checkAccessToken(): string {
-    return this.appService.getHello();
+  checkAccessToken(): object {
+    return this.appService.accessTokenVerified();
   }
   @Post('/scan_entreprises')
   scanEntreprises(@Body() body: object): Promise<ScanCommandOutput> {
@@ -59,7 +59,9 @@ export class AppController {
   @Post('/change_password')
   changePassword(
     @Body() body: ChangePasswordRequest,
+    @Headers() headers: any,
   ): Promise<ChangePasswordCommandOutput> {
+    body.accessToken = headers['cognito-access-token'];
     return this.appService.changePassword(body);
   }
   @Post('/login')
