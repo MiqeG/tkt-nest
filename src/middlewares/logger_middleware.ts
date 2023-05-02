@@ -8,6 +8,7 @@ export class LoggerMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const accessToken = req.header('cognito-access-token');
     const refreshToken = req.header('cognito-refresh-token');
+
     if (!accessToken) return res.status(500).json({ code: 'Unauthorized' });
     if (!(await parse_token(accessToken))) {
       if (!refreshToken)
